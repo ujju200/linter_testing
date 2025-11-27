@@ -3,10 +3,9 @@ name: Lint Code
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
-    branches:
-      - master
+    types: [opened, synchronize, reopened]
 
 jobs:
   lint:
