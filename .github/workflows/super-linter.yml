@@ -29,3 +29,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SUPER_TOKEN }}
           VALIDATE_ALL_CODEBASE: false  # Only lint changed files on PRs
           DEFAULT_BRANCH: main
+          DISABLE_GITHUB_STATUS: true
