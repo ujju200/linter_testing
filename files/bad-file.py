@@ -27,7 +27,7 @@ def divide(a, b):
 
 class myClass:  # Class naming: should be MyClass
     def __init__(self):
-        self.value = 0
+        self.value = 1
     
     def getValue(self):  # Method naming: should be get_value
         return self.value
