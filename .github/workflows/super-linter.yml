@@ -28,4 +28,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.SUPER_TOKEN }}
           VALIDATE_ALL_CODEBASE: false  # Only lint changed files on PRs
-          DEFAULT_BRANCH: master
+          DEFAULT_BRANCH: main
