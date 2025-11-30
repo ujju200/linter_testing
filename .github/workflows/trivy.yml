@@ -7,39 +7,27 @@ on:
   pull_request:
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
+  build:
+    name: Build
+    runs-on: ubuntu-24.04
+
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
+      # Checkout source code
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
-      # The first call to the action will invoke setup-trivy and install trivy
-      - name: Generate Trivy Vulnerability Report
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: "fs"
-          output: trivy-report.json
-          format: json
-          scan-ref: .
-          exit-code: 0
+      # Build Docker image (Dockerfile is in repo root)
+      - name: Build Docker image
+        run: |
+          docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
 
-      - name: Upload Vulnerability Scan Results
-        uses: actions/upload-artifact@v4
+      # Run Trivy vulnerability scanner against the built image
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2 # 0.28.0
         with:
-          name: trivy-report
-          path: trivy-report.json
-          retention-days: 30
-
-      - name: Fail build on High/Criticial Vulnerabilities
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: "fs"
+          image-ref: docker.io/my-organization/my-app:${{ github.sha }}
           format: table
-          scan-ref: .
-          severity: HIGH,CRITICAL
+          exit-code: '1'
           ignore-unfixed: true
-          exit-code: 1
-          # On a subsequent call to the action we know trivy is already installed so can skip this
-          skip-setup-trivy: true
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
